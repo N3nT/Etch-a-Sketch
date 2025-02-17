@@ -1,24 +1,42 @@
 const mainPad = document.querySelector('.mainPad');
-const cells = document.querySelectorAll(".cell");
-let cellsNumberInput = document.querySelector('.cellsNum');
-const cell = document.createElement("div");
-cell.className = "cell border-2 p-5";
+const eraser = document.querySelector('.eraser');
+const clear = document.querySelector('.clear');
+const okButton = document.querySelector('.okButton');
 
-const getCellsNumber = () => {
-  let cellsNumber = cellsNumberInput.value;
-  mainPad.classList.add(`grid-cols-${cellsNumber}`);
-  console.log(cellsNumber * cellsNumber);
-  for(let i = 0; i < cellsNumber * cellsNumber - 1; i++){
-    console.log(i);
-    mainPad.appendChild(cell);
-  }
-  cells.forEach(cell => {
-    cell.addEventListener('mouseover', () => {
-      cell.classList.add('bg-black');
-    })
-  });
+let colorPicker = document.querySelector('.colorPicker');
+let color = colorPicker.value;
+
+const generateSketch = () => {
+	mainPad.innerHTML = '';
+	let cellsNumber = document.querySelector('.cellsNum').value;
+	if (cellsNumber > 100) {
+		alert('It is too much! Do you want to have a fire at home?');
+	} else {
+		let size = 500 / cellsNumber;
+		for (let i = 0; i < cellsNumber * cellsNumber; i++) {
+			const cell = document.createElement('div');
+      cell.style.transition = "background-color 0.5s ease-in-out";
+			cell.style.width = `${size}px`;
+			cell.style.height = `${size}px`;
+			cell.addEventListener('mouseover', () => {
+				cell.style.backgroundColor = color;
+			})
+			mainPad.appendChild(cell);
+		}
+	}
 }
 
-cellsNumberInput.addEventListener('change', getCellsNumber);
-//cell border-2 p-5 - cell
-//grid-cols-4 - mainPad
+okButton.addEventListener('click', generateSketch)
+colorPicker.addEventListener('change', () => {
+	color = colorPicker.value;
+})
+eraser.addEventListener('click', () => {
+	color = '#fff';
+})
+clear.addEventListener('click', () => {
+	mainPad.innerHTML = '';
+  generateSketch();
+})
+window.addEventListener('load', () => {
+	generateSketch();
+})
